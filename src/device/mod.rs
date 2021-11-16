@@ -51,7 +51,7 @@ pub struct Socket {
     name: String,
     device_type: DeviceType,
     pub description: String,
-    on: bool
+    switcher: bool
 }
 
 impl Socket {
@@ -60,19 +60,23 @@ impl Socket {
             name: name.trim().to_string(),
             device_type: DeviceType::Socket,
             description: description.to_string(),
-            on: false
+            switcher: false
         }
     }
 
     pub fn on(&mut self) {
-        self.on = true;
+        self.switcher = true;
     }
 
     pub fn off(&mut self) {
-        self.on = false;
+        self.switcher = false;
     }
 
-    pub fn capacity() -> i32 {
+    pub fn switcher(&self) -> bool {
+        self.switcher
+    }
+
+    pub fn get_capacity(&self) -> i32 {
         500
     }
 }

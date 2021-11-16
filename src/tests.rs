@@ -130,7 +130,12 @@ fn test_7() {
     let _ = house.room_mut("First room").unwrap().add_device(Box::new(device));
 
     if let Ok(device) = house.room_mut("First room").unwrap().device_mut("Socket") {
-        let socket = device.as_any().downcast_ref::<&mut Socket>().unwrap();
-        // (*socket).on();
+        let socket = device.as_any_mut().downcast_mut::<Socket>().unwrap();
+        socket.on();
+        socket.off();
+        socket.on();
+        let device_ref = house.room("First room").unwrap().device("Socket").unwrap().as_any().downcast_ref::<Socket>().unwrap();
+        assert_eq!(device_ref.switcher(), true);
+        assert_eq!(device_ref.get_capacity(), 500);
     }
 }
