@@ -2,12 +2,12 @@ use crate::room::Room;
 use crate::device::Device;
 use crate::error::CustomError;
 
-pub struct House<'a> {
+pub struct House {
     name: String,
-    rooms: Vec<Room<'a>>,
+    rooms: Vec<Room>,
 }
 
-impl House<'_> {
+impl House {
     pub fn new(name: &str) -> Self {
         Self {
             name: name.trim().to_string(),
@@ -56,14 +56,14 @@ impl House<'_> {
             return Ok(());
         }
 
-        return Err(CustomError::NotFound(format!("room: {}", name)))
+        return Err(CustomError::NotFound(format!("room: {}", name)));
     }
 
     pub fn get_device(&self, room_name: &String, device_name: &String) -> Result<&dyn Device, CustomError> {
         self.room(room_name)?.device(device_name)
     }
 
-    pub fn add_device(&mut self, room_name: &String, device: &dyn Device) -> Result<&dyn Device, CustomError> {
+    pub fn add_device(&mut self, room_name: &String, device: Box<dyn Device>) -> Result<&dyn Device, CustomError> {
         self.room_mut(room_name)?.add_device(device)
     }
 
