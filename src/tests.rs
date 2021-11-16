@@ -131,6 +131,6 @@ fn test_7() {
 
     if let Ok(device) = house.room_mut("First room").unwrap().device_mut("Socket") {
         let socket = device.as_any().downcast_ref::<&mut Socket>().unwrap();
-        (*socket).on();
+        // (*socket).on();
     }
 }
