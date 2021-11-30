@@ -1,5 +1,5 @@
 use crate::device::Device;
-use crate::error::CustomError;
+use crate::error::DeviceError;
 
 pub struct Room {
     name: String,
@@ -22,26 +22,26 @@ impl Room {
         &self.devices
     }
 
-    pub fn device(&self, device_name: &str) -> Result<&dyn Device, CustomError> {
+    pub fn device(&self, device_name: &str) -> Result<&dyn Device, DeviceError> {
         if let Some(pos) = self.devices.iter().position(|item| item.name().eq(device_name)) {
             return Ok(&*self.devices[pos]);
         }
 
-        Err(CustomError::NotFound(format!("room: {}, device: {}", self.name(), device_name)))
+        Err(DeviceError::NotFound(device_name.to_string(), self.name.to_string()))
     }
 
-    pub fn device_mut(&mut self, device_name: &str) -> Result<&mut dyn Device, CustomError> {
+    pub fn device_mut(&mut self, device_name: &str) -> Result<&mut dyn Device, DeviceError> {
         if let Some(pos) = self.devices.iter().position(|item| item.name().eq(device_name)) {
             return Ok(&mut *self.devices[pos]);
         }
 
-        Err(CustomError::NotFound(format!("room: {}, device: {}", self.name(), device_name)))
+        Err(DeviceError::NotFound(device_name.to_string(), self.name.to_string()))
     }
 
-    pub fn add_device(&mut self, device: Box<dyn Device>) -> Result<&dyn Device, CustomError> {
+    pub fn add_device(&mut self, device: Box<dyn Device>) -> Result<&dyn Device, DeviceError> {
         let device_name = device.name().clone();
-        if let Some(_) = self.devices.iter().position(|item| item.name().eq(&device_name)) {
-            return Err(CustomError::NotUnique(format!("device: {}", device_name)));
+        if self.devices.iter().any(|item| item.name().eq(&device_name)) {
+            return Err(DeviceError::NotUnique(device_name, self.name.to_string()));
         }
 
         self.devices.push(device);
@@ -49,13 +49,13 @@ impl Room {
         self.device(&device_name)
     }
 
-    pub fn remove_device(&mut self, device_name: &str) -> Result<(), CustomError> {
+    pub fn remove_device(&mut self, device_name: &str) -> Result<(), DeviceError> {
         if let Some(pos) = self.devices.iter().position(|item| item.name().eq(device_name)) {
             self.devices.remove(pos);
             return Ok(());
         }
 
-        return Err(CustomError::NotFound(format!("device: {}", device_name)));
+        Err(DeviceError::NotFound(device_name.to_string(), self.name.to_string()))
 
     }
 }

@@ -135,7 +135,7 @@ fn test_7() {
         socket.off();
         socket.on();
         let device_ref = house.room("First room").unwrap().device("Socket").unwrap().as_any().downcast_ref::<Socket>().unwrap();
-        assert_eq!(device_ref.switcher(), true);
+        assert_eq!(device_ref.switch(), true);
         assert_eq!(device_ref.get_capacity(), 500);
     }
 }

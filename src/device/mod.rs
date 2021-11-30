@@ -72,7 +72,7 @@ impl Socket {
         self.switcher = false;
     }
 
-    pub fn switcher(&self) -> bool {
+    pub fn switch(&self) -> bool {
         self.switcher
     }
 
